@@ -60,7 +60,7 @@ HEALTHCHECK CMD [ "/usr/local/bin/entrypoint-archlinux.sh", "healthcheck" ]
 ENTRYPOINT [ "/usr/local/bin/entrypoint-archlinux.sh" ]
 CMD [ "/usr/bin/bash", "-l" ]
 
-FROM lopsided/archlinux-arch64 AS build-arch64
+FROM lopsided/archlinux-arm64v8 AS build-arch64
 
 RUN pacman --noconfirm -Syyu --noconfirm && \
   pacman --noconfirm -Syy --noconfirm \
