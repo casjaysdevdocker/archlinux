@@ -54,7 +54,7 @@ WORKDIR /root
 VOLUME ["/root","/config"]
 EXPOSE 9090
 
-COPY --from=build-amd64 /. /
+COPY --from=build-arch64 /. /
 
 HEALTHCHECK CMD [ "/usr/local/bin/entrypoint-archlinux.sh", "healthcheck" ]
 ENTRYPOINT [ "/usr/local/bin/entrypoint-archlinux.sh" ]
