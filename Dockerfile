@@ -20,8 +20,8 @@ RUN pacman --noconfirm -Syyu --noconfirm && \
   sudo -u aur yay --afterclean --removemake --save && \
   pacman -Qtdq | xargs -r pacman --noconfirm -Rcns && \
   rm -rf /home/aur/.cache && \
-  rm -rf /build \
-  mkdir -p /config \
+  rm -rf /build && \
+  mkdir -p /config && \
   ln -sf /bin/bash /bin/sh
 
 COPY ./bin/. /usr/local/bin/
