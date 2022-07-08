@@ -1,3 +1,4 @@
+# AMD 64
 FROM lopsided/archlinux-amd64 AS build-amd64
 
 RUN pacman --noconfirm -Syyu --noconfirm && \
@@ -54,12 +55,13 @@ WORKDIR /root
 VOLUME ["/root","/config"]
 EXPOSE 9090
 
-COPY --from=build-arch64 /. /
+COPY --from=build-amd64 /. /
 
 HEALTHCHECK CMD [ "/usr/local/bin/entrypoint-archlinux.sh", "healthcheck" ]
 ENTRYPOINT [ "/usr/local/bin/entrypoint-archlinux.sh" ]
 CMD [ "/usr/bin/bash", "-l" ]
 
+# Arch64
 FROM lopsided/archlinux-arm64v8 AS build-arch64
 
 RUN pacman --noconfirm -Syyu --noconfirm && \
