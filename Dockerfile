@@ -85,7 +85,7 @@ RUN pacman --noconfirm -Syyu --noconfirm && \
   pacman -Qtdq | xargs -r pacman --noconfirm -Rcns && \
   rm -rf /home/aur/.cache && \
   rm -rf /build \
-  mkdir -p /config \
+  mkdir -p /config /data \
   ln -sf /bin/bash /bin/sh
 
 COPY ./bin/. /usr/local/bin/
