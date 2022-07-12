@@ -1,6 +1,18 @@
-FROM --platform=linux/amd64 archlinux as build
+FROM --platform=linux/amd64 archlinux/archlinux:latest as build
 
-RUN pacman --noconfirm -Syyu --noconfirm && \
+ARG LICENSE=WTFPL \
+  IMAGE_NAME=archlinux \
+  TIMEZONE=America/New_York \
+  PORT=
+
+ENV SHELL=/bin/bash \
+  TERM=xterm-256color \
+  HOSTNAME=${HOSTNAME:-casjaysdev-$IMAGE_NAME} \
+  TZ=$TIMEZONE
+
+RUN mkdir -p /bin/ /config/ /data/ && \
+  rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
+  pacman --noconfirm -Syyu --noconfirm && \
   pacman --noconfirm -Syy --noconfirm \
   base-devel \
   bash \
@@ -29,17 +41,16 @@ COPY ./config/. /config/
 COPY ./data/. /data/
 
 FROM scratch
-
 ARG BUILD_DATE="$(date +'%Y-%m-%d %H:%M')"
 
 LABEL org.label-schema.name="archlinux" \
-  org.label-schema.description="containerized version of archlinux" \
-  org.label-schema.url="https://github.com/dockerize-it/archlinux" \
-  org.label-schema.vcs-url="https://github.com/dockerize-it/archlinux" \
+  org.label-schema.description="Containerized version of archlinux" \
+  org.label-schema.url="https://hub.docker.com/r/casjaysdevdocker/archlinux" \
+  org.label-schema.vcs-url="https://github.com/casjaysdevdocker/archlinux" \
   org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.version=$BUILD_DATE \
   org.label-schema.vcs-ref=$BUILD_DATE \
-  org.label-schema.license="WTFPL" \
+  org.label-schema.license="$LICENSE" \
   org.label-schema.vcs-type="Git" \
   org.label-schema.schema-version="latest" \
   org.label-schema.vendor="CasjaysDev" \
@@ -51,11 +62,13 @@ ENV SHELL="/bin/bash" \
   TZ="${TZ:-America/New_York}"
 
 WORKDIR /root
-VOLUME ["/root","/config"]
-EXPOSE 9090
+
+VOLUME ["/root","/config","/data"]
+
+EXPOSE $PORT
 
 COPY --from=build /. /
 
-HEALTHCHECK CMD [ "/usr/local/bin/entrypoint-archlinux.sh", "healthcheck" ]
-ENTRYPOINT [ "/usr/local/bin/entrypoint-archlinux.sh" ]
-CMD [ "/usr/bin/bash", "-l" ]
+HEALTHCHECK CMD ["/usr/local/bin/entrypoint-archlinux.sh", "healthcheck"]
+
+ENTRYPOINT ["/usr/local/bin/entrypoint-archlinux.sh"]
